@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, message } from "antd";
 import axios from "axios";
 
-const CategoryList = () => {
+const CategoryList = ({ searchTerm }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -20,9 +20,18 @@ const CategoryList = () => {
     fetchCategories();
   }, []);
 
-  const columns = [{ title: "Name", dataIndex: "name", key: "name" }];
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  return <Table dataSource={categories} columns={columns} rowKey="_id" />;
+  const columns = [
+    { title: "Name", dataIndex: "name", key: "name" },
+    { title: "Description", dataIndex: "description", key: "description" },
+  ];
+
+  return (
+    <Table dataSource={filteredCategories} columns={columns} rowKey="_id" />
+  );
 };
 
 export default CategoryList;

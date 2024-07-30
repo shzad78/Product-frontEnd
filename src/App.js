@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+  Link,
+} from "react-router-dom";
 import { Layout, Menu } from "antd";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
@@ -34,27 +40,30 @@ const App = () => {
             {!isAuthenticated ? (
               <>
                 <Menu.Item key="1">
-                  <a href="/login">Login</a>
+                  <Link to="/login">Login</Link>
                 </Menu.Item>
                 <Menu.Item key="2">
-                  <a href="/register">Register</a>
+                  <Link to="/register">Register</Link>
                 </Menu.Item>
               </>
             ) : (
               <>
                 <Menu.Item key="3">
-                  <a href="/products">Products</a>
+                  <Link to="/dashboard">Dashboard</Link>
                 </Menu.Item>
                 <Menu.Item key="4">
-                  <a href="/categories">Categories</a>
+                  <Link to="/products">Products</Link>
                 </Menu.Item>
                 <Menu.Item key="5">
-                  <a href="/add-product">Add Product</a>
+                  <Link to="/categories">Categories</Link>
                 </Menu.Item>
                 <Menu.Item key="6">
-                  <a href="/add-category">Add Category</a>
+                  <Link to="/add-product">Add Product</Link>
                 </Menu.Item>
-                <Menu.Item key="7" onClick={handleLogout}>
+                <Menu.Item key="7">
+                  <Link to="/add-category">Add Category</Link>
+                </Menu.Item>
+                <Menu.Item key="8" onClick={handleLogout}>
                   Logout
                 </Menu.Item>
               </>
@@ -68,11 +77,24 @@ const App = () => {
               element={<Login setIsAuthenticated={setIsAuthenticated} />}
             />
             <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/products" element={<ProductList />} />
-            <Route path="/categories" element={<CategoryList />} />
-            <Route path="/add-product" element={<AddProduct />} />
-            <Route path="/add-category" element={<AddCategory />} />
+            {isAuthenticated ? (
+              <>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route
+                  path="/products"
+                  element={<ProductList searchTerm="" />}
+                />
+                <Route
+                  path="/categories"
+                  element={<CategoryList searchTerm="" />}
+                />
+                <Route path="/add-product" element={<AddProduct />} />
+                <Route path="/add-category" element={<AddCategory />} />
+                <Route path="/" element={<Navigate to="/dashboard" />} />
+              </>
+            ) : (
+              <Route path="/" element={<Navigate to="/login" />} />
+            )}
           </Routes>
         </Content>
       </Layout>
